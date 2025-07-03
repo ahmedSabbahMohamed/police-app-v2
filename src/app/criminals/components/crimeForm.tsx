@@ -58,6 +58,16 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
                     lastBehaviors: initialData.lastBehaviors
                 }
             });
+        } else {
+            // Reset to empty form for creating new crime
+            form.reset({
+                crime: {
+                    number: "",
+                    typeOfAccusation: "",
+                    year: 0,
+                    lastBehaviors: ""
+                }
+            });
         }
     }, [initialData, form]);
 
@@ -68,6 +78,8 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
             console.log(values);
         }
     }
+
+    const isEditMode = !!initialData;
 
   return (
     <Form {...form}>
@@ -153,10 +165,10 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
                     {isSubmitting ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Updating...
+                            {isEditMode ? "Updating..." : "Creating..."}
                         </>
                     ) : (
-                        "Update Crime"
+                        isEditMode ? "Update Crime" : "Create Crime"
                     )}
                 </Button>
         </form>

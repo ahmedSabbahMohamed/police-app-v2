@@ -17,7 +17,6 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
   } from '@/components/ui/dialog';
   import {
     AlertDialog,
@@ -30,7 +29,7 @@ import {
     AlertDialogTitle,
   } from '@/components/ui/alert-dialog';
   import { Button } from '@/components/ui/button';
-  import { MoreHorizontal, Edit, Trash2 } from 'lucide-react';
+  import { MoreHorizontal, Edit, Trash2, Plus } from 'lucide-react';
   import { useState } from 'react';
   import CrimeForm from './crimeForm';
   
@@ -58,20 +57,32 @@ import {
     updatedAt: string;
   }
   
+  interface FormValues {
+    crime: {
+      number: string;
+      year: number;
+      typeOfAccusation: string;
+      lastBehaviors: string;
+    };
+  }
+
   interface CrimesTableProps {
     crimes: Crime[];
     criminal: Criminal; // Add criminal prop to get nationalId
     onEdit: (crime: Crime) => void;
     onDelete: (crimeId: string) => void;
+    onAdd: (crime: Crime) => void; // Add callback for new crimes
   }
   
-  const CrimesTable: React.FC<CrimesTableProps> = ({ crimes, criminal, onEdit, onDelete }) => {
+  const CrimesTable: React.FC<CrimesTableProps> = ({ crimes, criminal, onEdit, onDelete, onAdd }) => {
     const [editingCrime, setEditingCrime] = useState<Crime | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [deletingCrime, setDeletingCrime] = useState<Crime | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
 
     const handleEditClick = (crime: Crime) => {
       setEditingCrime(crime);
@@ -83,7 +94,11 @@ import {
       setIsDeleteDialogOpen(true);
     };
 
-    const handleFormSubmit = async (values: any) => {
+    const handleAddClick = () => {
+      setIsAddDialogOpen(true);
+    };
+
+    const handleFormSubmit = async (values: FormValues) => {
       if (!editingCrime) return;
 
       setIsUpdating(true);
@@ -120,6 +135,46 @@ import {
       }
     };
 
+    const handleAddFormSubmit = async (values: FormValues) => {
+      setIsAdding(true);
+      
+      try {
+        const response = await fetch(`/api/criminal?nationalId=${criminal.nationalId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values.crime),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to add crime');
+        }
+
+        if (data.success) {
+          // Create a new crime object with generated ID
+          const newCrime: Crime = {
+            id: `temp-${Date.now()}`, // Temporary ID, will be updated when data is refreshed
+            ...values.crime,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          
+          onAdd(newCrime);
+          setIsAddDialogOpen(false);
+        } else {
+          throw new Error(data.error || 'Add failed');
+        }
+      } catch (error) {
+        console.error('Error adding crime:', error);
+        alert(error instanceof Error ? error.message : 'Failed to add crime');
+      } finally {
+        setIsAdding(false);
+      }
+    };
+
     const handleDeleteConfirm = async () => {
       if (!deletingCrime) return;
 
@@ -153,50 +208,64 @@ import {
     };
 
     return (
-      <div className="border rounded-md overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-slate-900 text-white hover:bg-slate-900">
-              <TableHead className="w-1/5 text-white">Number</TableHead>
-              <TableHead className="w-1/5 text-white">Year</TableHead>
-              <TableHead className="w-1/5 text-white">Type of Accusation</TableHead>
-              <TableHead className="w-2/5 text-white">Last Behaviors</TableHead>
-              <TableHead className="text-right w-[50px] text-white">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {crimes.map((crime) => (
-              <TableRow key={crime.id} className="odd:bg-muted/40">
-                <TableCell>{crime.number}</TableCell>
-                <TableCell>{crime.year}</TableCell>
-                <TableCell>{crime.typeOfAccusation}</TableCell>
-                <TableCell>{crime.lastBehaviors}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleEditClick(crime)}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        className="text-red-500" 
-                        onClick={() => handleDeleteClick(crime)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2 text-red-500" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+      <div className="space-y-4">
+        {/* Add Crime Button */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Criminal Record ({crimes.length} crimes)
+          </h2>
+          <Button onClick={handleAddClick} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Add Crime
+          </Button>
+        </div>
+
+        {/* Crimes Table */}
+        <div className="border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-900 text-white hover:bg-slate-900">
+                <TableHead className="w-1/5 text-white">Number</TableHead>
+                <TableHead className="w-1/5 text-white">Year</TableHead>
+                <TableHead className="w-1/5 text-white">Type of Accusation</TableHead>
+                <TableHead className="w-2/5 text-white">Last Behaviors</TableHead>
+                <TableHead className="text-right w-[50px] text-white">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {crimes.map((crime) => (
+                <TableRow key={crime.id} className="odd:bg-muted/40">
+                  <TableCell>{crime.number}</TableCell>
+                  <TableCell>{crime.year}</TableCell>
+                  <TableCell>{crime.typeOfAccusation}</TableCell>
+                  <TableCell>{crime.lastBehaviors}</TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleEditClick(crime)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          className="text-red-500" 
+                          onClick={() => handleDeleteClick(crime)}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         {/* Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -212,13 +281,26 @@ import {
           </DialogContent>
         </Dialog>
 
+        {/* Add Crime Dialog */}
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Add New Crime</DialogTitle>
+            </DialogHeader>
+            <CrimeForm 
+              onSubmit={handleAddFormSubmit}
+              isSubmitting={isAdding}
+            />
+          </DialogContent>
+        </Dialog>
+
         {/* Delete Confirmation Dialog */}
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently remove the crime "{deletingCrime?.number}" from {criminal.name}'s record.
+                This action cannot be undone. This will permanently remove the crime &quot;{deletingCrime?.number}&quot; from {criminal.name}&apos;s record.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

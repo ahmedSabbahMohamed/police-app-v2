@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react";
+
+export const dynamic = 'force-dynamic';
 import { Search } from "./components"
 import CrimesTable from "./components/crimesTable"
 import CriminalDetails from "./components/criminalDetails"
@@ -36,7 +38,7 @@ interface SearchResult {
   crimes: Crime[];
 }
 
-const page = () => {
+const Page = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,6 +77,17 @@ const page = () => {
       prevResults.map(result => ({
         ...result,
         crimes: result.crimes.filter(c => c.id !== crimeId)
+      }))
+    );
+  };
+
+  const handleAddCrime = (crime: Crime) => {
+    console.log("Add crime:", crime);
+    // Add the new crime to the search results
+    setSearchResults(prevResults => 
+      prevResults.map(result => ({
+        ...result,
+        crimes: [...result.crimes, crime]
       }))
     );
   };
@@ -126,16 +139,12 @@ const page = () => {
               
               {/* Crimes Table */}
               <div className="mt-10">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    Criminal Record ({result.crimes.length} crimes)
-                  </h2>
-                </div>
                 <CrimesTable
                   crimes={result.crimes}
                   criminal={result.criminal}
                   onEdit={handleEditCrime}
                   onDelete={handleDeleteCrime}
+                  onAdd={handleAddCrime}
                 />
               </div>
 
@@ -164,4 +173,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

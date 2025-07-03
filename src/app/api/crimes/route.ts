@@ -7,6 +7,8 @@ import { and, eq, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 
+export const dynamic = 'force-dynamic';
+
 const getCrimeHandler = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("query");
@@ -108,7 +110,7 @@ const createCrimeHandler = async (req: NextRequest) => {
 
   for (const criminal of criminals) {
     // Check if criminal exists by nationalId
-    let existing = await db.query.CriminalTable.findFirst({
+    const existing = await db.query.CriminalTable.findFirst({
       where: eq(CriminalTable.nationalId, criminal.nationalId),
     });
 

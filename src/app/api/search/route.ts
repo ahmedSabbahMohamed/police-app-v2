@@ -4,6 +4,8 @@ import { createHandler } from "@/lib/api/handler";
 import { eq, like, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 const searchCriminalHandler = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const nationalId = searchParams.get("nationalId");

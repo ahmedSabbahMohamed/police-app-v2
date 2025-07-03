@@ -5,6 +5,8 @@ import { eq, like, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 
+export const dynamic = 'force-dynamic';
+
 const createCrimeHandler = async (req: NextRequest) => {
     const { searchParams } = new URL(req.url);
     const nationalId = searchParams.get("nationalId");
