@@ -1,0 +1,1 @@
+ALTER TABLE `crimes` ADD `number` text NOT NULL;
