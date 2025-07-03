@@ -211,35 +211,37 @@ import {
       <div className="space-y-4">
         {/* Add Crime Button */}
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-900">
-            Criminal Record ({crimes.length} crimes)
-          </h2>
           <Button onClick={handleAddClick} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
-            Add Crime
+            إضافة قضية جديدة
           </Button>
+          <h2 className="text-xl font-semibold text-gray-900">
+            ({crimes.length} قضية)
+          </h2>
         </div>
 
         {/* Crimes Table */}
-        <div className="border rounded-md overflow-hidden">
-          <Table>
+        <div className="border-2 border-gray-300 rounded-md overflow-hidden">
+          <Table className="border-collapse">
             <TableHeader>
               <TableRow className="bg-slate-900 text-white hover:bg-slate-900">
-                <TableHead className="w-1/5 text-white">Number</TableHead>
-                <TableHead className="w-1/5 text-white">Year</TableHead>
-                <TableHead className="w-1/5 text-white">Type of Accusation</TableHead>
-                <TableHead className="w-2/5 text-white">Last Behaviors</TableHead>
-                <TableHead className="text-right w-[50px] text-white">Actions</TableHead>
+                <TableHead className="w-1/5 text-white text-center border border-gray-300">م</TableHead>
+                <TableHead className="w-1/5 text-white text-center border border-gray-300">رقم القضية</TableHead>
+                <TableHead className="w-1/5 text-white text-center border border-gray-300">سنة القضية </TableHead>
+                <TableHead className="w-1/5 text-white text-center border border-gray-300">نوع الاتهام</TableHead>
+                <TableHead className="w-2/5 text-white text-center border border-gray-300">التصرفات النهائية</TableHead>
+                <TableHead className="text-center w-[50px] text-white border border-gray-300">الإجراءات</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {crimes.map((crime) => (
+              {crimes.map((crime, index) => (
                 <TableRow key={crime.id} className="odd:bg-muted/40">
-                  <TableCell>{crime.number}</TableCell>
-                  <TableCell>{crime.year}</TableCell>
-                  <TableCell>{crime.typeOfAccusation}</TableCell>
-                  <TableCell>{crime.lastBehaviors}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className='text-center border border-gray-300'>{index + 1}</TableCell>
+                  <TableCell className='text-center border border-gray-300'>{crime.number}</TableCell>
+                  <TableCell className='text-center border border-gray-300'>{crime.year}</TableCell>
+                  <TableCell className='text-center border border-gray-300'>{crime.typeOfAccusation}</TableCell>
+                  <TableCell className='text-center border border-gray-300'>{crime.lastBehaviors}</TableCell>
+                  <TableCell className="text-center border border-gray-300">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -249,14 +251,14 @@ import {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleEditClick(crime)}>
                           <Edit className="h-4 w-4 mr-2" />
-                          Edit
+                          تعديل
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           className="text-red-500" 
                           onClick={() => handleDeleteClick(crime)}
                         >
                           <Trash2 className="h-4 w-4 mr-2 text-red-500" />
-                          Delete
+                          حذف
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -271,7 +273,9 @@ import {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Edit Crime</DialogTitle>
+                <h2 className="block text-end mt-4 text-2xl font-semibold text-gray-900">
+                  تعديل القضية
+                </h2>
             </DialogHeader>
             <CrimeForm 
               initialData={editingCrime}
@@ -285,7 +289,9 @@ import {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Add New Crime</DialogTitle>
+              <h2 className="block text-end mt-4 text-2xl font-semibold text-gray-900">
+                إضافة قضية جديدة
+              </h2>
             </DialogHeader>
             <CrimeForm 
               onSubmit={handleAddFormSubmit}
@@ -298,19 +304,21 @@ import {
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently remove the crime &quot;{deletingCrime?.number}&quot; from {criminal.name}&apos;s record.
-              </AlertDialogDescription>
+              <h2 className="block text-end mt-4 text-2xl font-semibold text-gray-900">
+                هل أنت متأكد؟
+              </h2>
+              <h3 className='text-end'>
+                <span className="text-red-600 font-semibold">تحذير:</span> حذف الجريمة سيؤدي إلى فقدان جميع البيانات المرتبطة بها.
+              </h3>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>إلغاء</AlertDialogCancel>
               <AlertDialogAction 
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
                 className="bg-red-600 hover:bg-red-700"
               >
-                {isDeleting ? "Deleting..." : "Delete"}
+                {isDeleting ? "حذف..." : "حذف"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

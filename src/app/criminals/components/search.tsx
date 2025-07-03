@@ -6,7 +6,7 @@ import { FormField, FormItem, FormControl, Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Search as SearchIcon } from "lucide-react";
+import { LoaderIcon, Search as SearchIcon } from "lucide-react";
 import z from "zod";
 
 interface Criminal {
@@ -132,7 +132,7 @@ const Search = ({ onSearchResults, onLoading, onError }: SearchProps) => {
                                     <div className="relative">
                                         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                                         <Input
-                                            placeholder="Search by name, stage name, or national ID"
+                                            placeholder="ابحث بإستخدام الاسم أو الرقم القومي أو إسم الشهرة "
                                             type="text"
                                             className="pl-10"
                                             {...field} 
@@ -149,7 +149,7 @@ const Search = ({ onSearchResults, onLoading, onError }: SearchProps) => {
                     type="submit" 
                     className="sm:col-span-1 col-span-6 cursor-pointer"
                 >
-                    {loading ? "Searching..." : "Search"}
+                    {loading ? <LoaderIcon /> : "ابحث"}
                 </Button>
             </form>
         </Form>

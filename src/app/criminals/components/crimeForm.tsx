@@ -83,13 +83,13 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
 
   return (
     <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <form dir="rtl" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
                 control={form.control}
                 name="crime.number"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Crime Number</FormLabel>
+                    <FormLabel>رقم القضية</FormLabel>
                     <FormControl>
                         <Input 
                         placeholder="CR-2024-001"
@@ -106,10 +106,10 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
                 name="crime.typeOfAccusation"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Type of accusation</FormLabel>
+                    <FormLabel>نوع الاتهام</FormLabel>
                     <FormControl>
                         <Input 
-                        placeholder="Robbery"
+                        placeholder="سرقة"
                         type="text"
                         {...field} />
                     </FormControl>
@@ -123,7 +123,7 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
                 name="crime.year"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Year</FormLabel>
+                    <FormLabel>سنة القضية </FormLabel>
                     <FormControl>
                         <Input 
                         placeholder="2024"
@@ -144,10 +144,10 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
                 name="crime.lastBehaviors"
                 render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Last behaviors</FormLabel>
+                    <FormLabel>التصرفات النهائية </FormLabel>
                     <FormControl>
                         <Textarea
-                        placeholder="Last behaviors"
+                        placeholder="التصرفات النهائية التي قام بها الجاني قبل ارتكاب الجريمة"
                         className="resize-none"
                         {...field}
                         />
@@ -165,10 +165,10 @@ const CrimeForm: React.FC<CrimeFormProps> = ({ initialData, onSubmit, isSubmitti
                     {isSubmitting ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {isEditMode ? "Updating..." : "Creating..."}
+                            {isEditMode ? "تحديث..." : "إنشاء..."}
                         </>
                     ) : (
-                        isEditMode ? "Update Crime" : "Create Crime"
+                        isEditMode ? "تحديث القضية" : "إنشاء قضية"
                     )}
                 </Button>
         </form>

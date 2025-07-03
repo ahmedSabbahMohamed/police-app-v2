@@ -93,7 +93,7 @@ const Page = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
+    <div dir="rtl" className="w-full max-w-4xl mx-auto p-6">
       <Search 
         onSearchResults={handleSearchResults}
         onLoading={handleLoading}
@@ -112,7 +112,7 @@ const Page = () => {
       {loading && (
         <div className="text-center py-12">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Searching for criminals...</p>
+          <p className="text-gray-600">جاري البحث عن المجرمين...</p>
         </div>
       )}
 
@@ -124,8 +124,8 @@ const Page = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No Results Found</h3>
-          <p className="text-gray-500">No criminals found matching your search criteria.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">لا توجد نتائج</h3>
+          <p className="text-gray-500">لم يتم العثور على مجرمين يتطابقون مع معايير البحث الخاصة بك.</p>
         </div>
       )}
 
@@ -165,8 +165,8 @@ const Page = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Search for Criminal Records</h3>
-          <p className="text-gray-500">Enter a name, stage name, or national ID to search for criminal records.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">ابحث عن سجلات المجرمين</h3>
+          <p className="text-gray-500">أدخل اسمًا أو اسم شهرة أو رقمًا قوميًّا للبحث عن سجلات المجرمين.</p>
         </div>
       )}
     </div>

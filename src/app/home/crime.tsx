@@ -151,18 +151,18 @@ export default function CrimeForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
+      <form dir="rtl" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
 
         <div className="border rounded-xl p-6 my-5 bg-white shadow-md space-y-4">
-            <h2 className="text-2xl font-bold mb-4">Crime Report</h2>
-            <p className="text-gray-600 mb-6">Please fill out the form below to report a crime.</p>
+            <h2 className="text-2xl font-bold mb-4">تقرير الجريمة</h2>
+            <p className="text-gray-600 mb-6">يرجى ملء النموذج أدناه للإبلاغ عن جريمة.</p>
 
             <FormField
             control={form.control}
             name="crime.number"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Crime Number</FormLabel>
+                <FormLabel>رقم القضية</FormLabel>
                 <FormControl>
                     <Input 
                     placeholder="CR-2024-001"
@@ -179,10 +179,10 @@ export default function CrimeForm() {
             name="crime.typeOfAccusation"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Type of accusation</FormLabel>
+                <FormLabel>نوع الاتهام </FormLabel>
                 <FormControl>
                     <Input 
-                    placeholder="Robbery"
+                    placeholder="سرقة"
                     type="text"
                     {...field} />
                 </FormControl>
@@ -196,7 +196,7 @@ export default function CrimeForm() {
             name="crime.year"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Year</FormLabel>
+                <FormLabel>سنة القضية </FormLabel>
                 <FormControl>
                     <Input 
                     placeholder="2024"
@@ -217,10 +217,10 @@ export default function CrimeForm() {
             name="crime.lastBehaviors"
             render={({ field }) => (
                 <FormItem>
-                <FormLabel>Last behaviors</FormLabel>
+                <FormLabel>التصرفات النهائية </FormLabel>
                 <FormControl>
                     <Textarea
-                    placeholder="Last behaviors"
+                    placeholder="التصرفات النهائية التي قام بها الجاني قبل ارتكاب الجريمة"
                     className="resize-none"
                     {...field}
                     />
@@ -233,14 +233,14 @@ export default function CrimeForm() {
 
         <div className="border rounded-xl p-6 my-5 bg-white shadow-md space-y-4">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Criminals who committed the crime</h2>
+                <h2 className="text-2xl font-bold">المجرمون الذين ارتكبوا الجريمة</h2>
             </div>
-            <p className="text-gray-600 mb-6">Please fill out the form below to report the criminals.</p>
+            <p className="text-gray-600 mb-6">يرجى ملء النموذج أدناه للإبلاغ عن المجرمين.</p>
 
             {fields.map((field, index) => (
                 <div key={field.id} className="border rounded-lg p-4 space-y-4">
                     <div className="flex justify-between items-center">
-                        <h3 className="text-lg font-semibold">Criminal {index + 1}</h3>
+                        <h3 className="text-lg font-semibold">المجرم {index + 1}</h3>
                         {fields.length > 1 && (
                             <Button
                                 type="button"
@@ -259,9 +259,9 @@ export default function CrimeForm() {
                             name={`criminals.${index}.name`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>الأسم </FormLabel>
                                     <FormControl>
-                                        <Input placeholder="John Doe" {...field} />
+                                        <Input placeholder="محمد محمد أحمد" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -273,7 +273,7 @@ export default function CrimeForm() {
                             name={`criminals.${index}.nationalId`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>National ID (14 digits)</FormLabel>
+                                    <FormLabel>الرقم القومي (14)</FormLabel>
                                     <FormControl>
                                         <Input placeholder="12345678901234" {...field} />
                                     </FormControl>
@@ -287,9 +287,9 @@ export default function CrimeForm() {
                             name={`criminals.${index}.job`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Job</FormLabel>
+                                    <FormLabel>الوظيفة </FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Mechanic" {...field} />
+                                        <Input placeholder="ميكانيكي" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -301,9 +301,9 @@ export default function CrimeForm() {
                             name={`criminals.${index}.motherName`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Mother&apos;s Name</FormLabel>
+                                    <FormLabel>إسم الام</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Jane Doe" {...field} />
+                                        <Input placeholder="فاطمة محمد" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -315,9 +315,9 @@ export default function CrimeForm() {
                             name={`criminals.${index}.stageName`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Stage Name</FormLabel>
+                                    <FormLabel>إسم الشهرة</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="The Ghost" {...field} />
+                                        <Input placeholder="الشبح" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -329,9 +329,9 @@ export default function CrimeForm() {
                             name={`criminals.${index}.impersonation`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Impersonation</FormLabel>
+                                    <FormLabel>إنتحال الشخصية</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Disguised as security guard" {...field} />
+                                        <Input placeholder="متنكر في هيئة رجل أمن" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -343,9 +343,9 @@ export default function CrimeForm() {
                             name={`criminals.${index}.address`}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Address (Optional)</FormLabel>
+                                    <FormLabel>العنوان</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="123 Main St, Cairo" {...field} />
+                                        <Input placeholder="123 شارع الرئيسي، القاهرة" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -357,7 +357,7 @@ export default function CrimeForm() {
                             name={`criminals.${index}.bod`}
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Date of Birth</FormLabel>
+                                    <FormLabel>تاريخ الميلاد</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -371,7 +371,7 @@ export default function CrimeForm() {
                                                     {field.value ? (
                                                         format(field.value, "PPP")
                                                     ) : (
-                                                        <span>Pick a date</span>
+                                                        <span>اختر تاريخًا</span>
                                                     )}
                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                 </Button>

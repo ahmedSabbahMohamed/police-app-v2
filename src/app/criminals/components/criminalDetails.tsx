@@ -16,14 +16,14 @@ interface CriminalDetailsProps {
 }
 
 const fields: { key: keyof Criminal; label: string }[] = [
-  { key: 'name', label: 'Name' },
-  { key: 'nationalId', label: 'National ID' },
-  { key: 'job', label: 'Job' },
-  { key: 'bod', label: 'Birth Date' },
-  { key: 'motherName', label: 'Mother\'s Name' },
-  { key: 'stageName', label: 'Stage Name' },
-  { key: 'impersonation', label: 'Impersonation' },
-  { key: 'address', label: 'Address' },
+  { key: 'name', label: 'الاسم' },
+  { key: 'nationalId', label: 'رقم الهوية الوطنية' },
+  { key: 'job', label: 'الوظيفة' },
+  { key: 'bod', label: 'تاريخ الميلاد' },
+  { key: 'motherName', label: 'اسم الأم' },
+  { key: 'stageName', label: 'اسم الشهرة' },
+  { key: 'impersonation', label: 'الانتحال' },
+  { key: 'address', label: 'العنوان' },
 ];
 
 const CriminalDetails: React.FC<CriminalDetailsProps> = ({ criminal }) => {
