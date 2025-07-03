@@ -43,6 +43,7 @@ const createCrimeHandler = async (req: NextRequest) => {
 
     await db.insert(CrimeTable).values({
         id: crimeId,
+        number: body.number,
         year: body.year,
         typeOfAccusation: body.typeOfAccusation,
         lastBehaviors: body.lastBehaviors,

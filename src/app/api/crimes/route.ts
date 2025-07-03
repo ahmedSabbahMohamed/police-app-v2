@@ -3,37 +3,43 @@ import { CrimeTable, CriminalCrimeTable, CriminalTable } from "@/drizzle/schema"
 import { createHandler } from "@/lib/api/handler";
 import { validate } from "@/lib/api/validate";
 import { AddCrimeWithCriminalsSchema } from "@/lib/validators";
-import { and, eq } from "drizzle-orm";
+import { and, eq, or } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 
 const getCrimeHandler = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
+  const query = searchParams.get("query");
   const crimeId = searchParams.get("id");
-  const nationalId = searchParams.get("nationalId");
 
-  if (!nationalId) {
+  if (!query) {
     return NextResponse.json({
       success: false,
-      error: "National ID is required."
+      error: "Search query is required (name, stageName, or nationalId)."
     }, { status: 400 });
   }
 
-  // 1. Lookup criminal by nationalId
-  const [criminal] = await db
+  // 1. Lookup criminal by name, stageName, or nationalId
+  const criminals = await db
     .select()
     .from(CriminalTable)
-    .where(eq(CriminalTable.nationalId, nationalId));
-
-  if (!criminal) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Criminal not found.",
-      },
-      { status: 404 }
+    .where(
+      or(
+        eq(CriminalTable.nationalId, query),
+        eq(CriminalTable.name, query),
+        eq(CriminalTable.stageName, query)
+      )
     );
+
+  if (criminals.length === 0) {
+    return NextResponse.json({
+      success: false,
+      error: "No criminal found matching the provided query.",
+    }, { status: 404 });
   }
+
+  // NOTE: Adjust this logic if you want to return all matched criminals.
+  const criminal = criminals[0];
 
   // 2. If crimeId is provided, get specific crime for this criminal
   if (crimeId) {
@@ -53,22 +59,16 @@ const getCrimeHandler = async (req: NextRequest) => {
       .innerJoin(CriminalTable, eq(CriminalTable.id, CriminalCrimeTable.criminalId));
 
     if (!record) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "No matching crime found for this criminal.",
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: false,
+        error: "No matching crime found for this criminal.",
+      }, { status: 404 });
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: record,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: true,
+      data: record,
+    }, { status: 200 });
   }
 
   // 3. If no crimeId provided, get all crimes for this criminal
@@ -82,14 +82,11 @@ const getCrimeHandler = async (req: NextRequest) => {
     .innerJoin(CrimeTable, eq(CrimeTable.id, CriminalCrimeTable.crimeId))
     .innerJoin(CriminalTable, eq(CriminalTable.id, CriminalCrimeTable.criminalId));
 
-  return NextResponse.json(
-    {
-      success: true,
-      data: records,
-    },
-    { status: 200 }
-  );
-}
+  return NextResponse.json({
+    success: true,
+    data: records,
+  }, { status: 200 });
+};
 
 const createCrimeHandler = async (req: NextRequest) => {
   const result = await validate(req, AddCrimeWithCriminalsSchema);
