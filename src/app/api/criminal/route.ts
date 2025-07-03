@@ -57,10 +57,7 @@ const createCrimeHandler = async (req: NextRequest) => {
     return NextResponse.json({
         success: true,
         data: {
-            message: "Crime added to criminal successfully!",
-            crimeId,
-            criminalId: criminal.id,
-            criminalName: criminal.name
+            message: "Crime added to criminal successfully!"
         }
     }, { status: 201 });
 };

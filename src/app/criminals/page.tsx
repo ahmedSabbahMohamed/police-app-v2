@@ -57,12 +57,26 @@ const page = () => {
 
   const handleEditCrime = (crime: Crime) => {
     console.log("Edit crime:", crime);
-    // Implement your edit logic here
+    // Update the crime in the search results
+    setSearchResults(prevResults => 
+      prevResults.map(result => ({
+        ...result,
+        crimes: result.crimes.map(c => 
+          c.id === crime.id ? crime : c
+        )
+      }))
+    );
   };
 
   const handleDeleteCrime = (crimeId: string) => {
     console.log("Delete crime:", crimeId);
-    // Implement your delete logic here
+    // Remove the crime from the search results
+    setSearchResults(prevResults => 
+      prevResults.map(result => ({
+        ...result,
+        crimes: result.crimes.filter(c => c.id !== crimeId)
+      }))
+    );
   };
 
   return (
@@ -119,6 +133,7 @@ const page = () => {
                 </div>
                 <CrimesTable
                   crimes={result.crimes}
+                  criminal={result.criminal}
                   onEdit={handleEditCrime}
                   onDelete={handleDeleteCrime}
                 />
