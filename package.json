@@ -5,7 +5,7 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
-    "build": "SKIP_DATABASE=true next build",
+    "build": "cross-env SKIP_DATABASE=true next build",
     "start": "next start",
     "lint": "next lint",
     "db:create": "npx drizzle-kit push --force",
@@ -66,6 +66,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.4",
     "electron": "^37.2.0",
     "electron-builder": "^26.0.12",

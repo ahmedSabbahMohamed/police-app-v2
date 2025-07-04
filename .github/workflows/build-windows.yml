@@ -26,6 +26,8 @@ jobs:
       
     - name: Build Next.js app
       run: npm run build
+      env:
+        SKIP_DATABASE: true
       
     - name: Start Next.js server
       run: npm start &
