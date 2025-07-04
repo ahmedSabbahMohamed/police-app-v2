@@ -14,7 +14,8 @@ const getDatabasePath = () => {
     return window.electronAPI.getDatabasePath();
   }
   
-  // Fallback for server-side rendering
+  // For server-side rendering in production, use a default path
+  // This will be overridden by the client-side logic
   return path.join(process.cwd(), "sqlite.db");
 };
 

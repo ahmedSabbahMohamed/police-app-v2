@@ -26,7 +26,22 @@ function createWindow() {
   // Load the app
   const startUrl = 'http://localhost:3000';
   
-  mainWindow.loadURL(startUrl);
+  // In production, start the Next.js server first
+  if (!isDev) {
+    const { spawn } = require('child_process');
+    const serverProcess = spawn('node', ['scripts/start-production.js'], {
+      stdio: 'pipe',
+      shell: true,
+      detached: true
+    });
+    
+    // Wait for server to start
+    setTimeout(() => {
+      mainWindow.loadURL(startUrl);
+    }, 3000);
+  } else {
+    mainWindow.loadURL(startUrl);
+  }
 
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
