@@ -79,6 +79,7 @@
       "electron/**/*",
       "package.json"
     ],
+    "publish": null,
     "mac": {
       "category": "public.app-category.utilities"
     },

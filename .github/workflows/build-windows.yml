@@ -35,21 +35,4 @@ jobs:
       with:
         name: police-app-windows
         path: dist/*.exe
-        retention-days: 30
-        
-    - name: Create release
-      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: dist/*.exe
-        tag_name: v${{ github.run_number }}
-        name: Police App v${{ github.run_number }}
-        body: |
-          Windows executable for Police App
-          
-          Built from commit: ${{ github.sha }}
-        draft: false
-        prerelease: false
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      continue-on-error: true 
+        retention-days: 30 
