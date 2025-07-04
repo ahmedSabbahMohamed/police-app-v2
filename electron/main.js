@@ -1,8 +1,10 @@
 const { app, BrowserWindow, Menu, shell } = require('electron');
 const path = require('path');
 const isDev = process.env.NODE_ENV === 'development';
+const NextServer = require('./server');
 
 let mainWindow;
+let nextServer = null;
 
 function createWindow() {
   // Create the browser window
@@ -26,22 +28,24 @@ function createWindow() {
   // Load the app
   const startUrl = 'http://localhost:3000';
   
-  // In production, start the Next.js server first
-  if (!isDev) {
-    const { spawn } = require('child_process');
-    const serverProcess = spawn('node', ['scripts/start-production.js'], {
-      stdio: 'pipe',
-      shell: true,
-      detached: true
-    });
-    
-    // Wait for server to start
-    setTimeout(() => {
+  // Start the Next.js server and then load the app
+  async function startApp() {
+    try {
+      if (!isDev) {
+        // Start built-in Next.js server in production
+        nextServer = new NextServer();
+        await nextServer.start();
+      }
+      
+      // Load the app
       mainWindow.loadURL(startUrl);
-    }, 3000);
-  } else {
-    mainWindow.loadURL(startUrl);
+    } catch (error) {
+      console.error('Failed to start app:', error);
+      app.quit();
+    }
   }
+  
+  startApp();
 
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
@@ -126,6 +130,13 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+// Cleanup when app quits
+app.on('before-quit', () => {
+  if (nextServer) {
+    nextServer.stop();
   }
 });
 

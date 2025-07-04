@@ -23,7 +23,8 @@
     "test:desktop": "npm run build && npm run test:electron",
     "build:electron": "node scripts/build-electron.js",
     "start:production": "node scripts/start-production.js",
-    "test:production": "node scripts/test-production.js"
+    "test:production": "node scripts/test-production.js",
+    "test:final": "node scripts/test-final-production.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -43,6 +44,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.44.2",
+    "express": "^4.21.2",
     "lucide-react": "^0.525.0",
     "next": "15.4.0-canary.108",
     "react": "19.1.0",
