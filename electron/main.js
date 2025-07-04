@@ -2,9 +2,11 @@ const { app, BrowserWindow, Menu, shell } = require('electron');
 const path = require('path');
 const isDev = process.env.NODE_ENV === 'development';
 const NextServer = require('./server');
+const DatabaseManager = require('./database');
 
 let mainWindow;
 let nextServer = null;
+let dbManager = null;
 
 function createWindow() {
   // Create the browser window
@@ -28,9 +30,19 @@ function createWindow() {
   // Load the app
   const startUrl = 'http://localhost:3000';
   
-  // Start the Next.js server and then load the app
+    // Start the Next.js server and then load the app
   async function startApp() {
     try {
+      // Initialize database first
+      if (!isDev) {
+        console.log('🔧 Initializing database...');
+        dbManager = new DatabaseManager();
+        await dbManager.initializeDatabase();
+        
+        // Set environment variable for database path
+        process.env.DATABASE_PATH = dbManager.getDatabasePath();
+      }
+      
       if (!isDev) {
         // Start built-in Next.js server in production
         nextServer = new NextServer();

@@ -86,6 +86,7 @@
     "files": [
       "electron/**/*",
       ".next/**/*",
+      "src/drizzle/**/*",
       "package.json"
     ],
     "publish": null,
