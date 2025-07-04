@@ -290,7 +290,7 @@ import {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle className="text-end">
+              <DialogTitle className="text-start mt-6">
                 تعديل القضية
               </DialogTitle>
             </DialogHeader>
@@ -306,7 +306,7 @@ import {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle className="text-end">
+              <DialogTitle className="text-start mt-6">
                 إضافة قضية جديدة
               </DialogTitle>
             </DialogHeader>
@@ -321,10 +321,10 @@ import {
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-end">
+              <AlertDialogTitle className="text-start mt-6">
                 هل أنت متأكد؟
               </AlertDialogTitle>
-              <AlertDialogDescription className='text-end'>
+              <AlertDialogDescription className='text-start'>
                 <span className="text-red-600 font-semibold">تحذير:</span> حذف الجريمة سيؤدي إلى فقدان جميع البيانات المرتبطة بها.
               </AlertDialogDescription>
             </AlertDialogHeader>

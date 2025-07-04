@@ -397,7 +397,7 @@ export default function CrimeForm() {
             <Button
               type="button"
               variant="outline"
-              className="rounded-full w-10 h-10 p-0 cursor-pointer"
+              className="rounded-full w-8 h-8 flex items-center justify-center"
               aria-label="Add Criminal"
               onClick={() => append({
                   name: "",
