@@ -5,7 +5,7 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "SKIP_DATABASE=true next build",
     "start": "next start",
     "lint": "next lint",
     "db:create": "npx drizzle-kit push --force",
@@ -20,7 +20,8 @@
     "electron:pack": "npm run build && electron-builder --win --dir",
     "electron:dist-win": "npm run build && electron-builder --win --x64",
     "test:electron": "node scripts/test-electron.js",
-    "test:desktop": "npm run build && npm run test:electron"
+    "test:desktop": "npm run build && npm run test:electron",
+    "build:electron": "node scripts/build-electron.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -79,7 +80,6 @@
     },
     "files": [
       "electron/**/*",
-      "out/**/*",
       "package.json"
     ],
     "publish": null,

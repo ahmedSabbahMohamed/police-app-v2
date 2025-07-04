@@ -27,6 +27,12 @@ jobs:
     - name: Build Next.js app
       run: npm run build
       
+    - name: Start Next.js server
+      run: npm start &
+      
+    - name: Wait for server
+      run: timeout 10 bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 1; done'
+      
     - name: Build Windows executable
       run: npm run electron:dist-win
       

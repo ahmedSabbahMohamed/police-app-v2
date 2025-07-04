@@ -6,8 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const createCrimeHandler = async (req: NextRequest) => {
+    
     const { searchParams } = new URL(req.url);
     const nationalId = searchParams.get("nationalId");
     
@@ -77,6 +79,7 @@ const createCrimeHandler = async (req: NextRequest) => {
 };
 
 const getCriminalHandler = async (req: NextRequest) => {
+  
   const { searchParams } = new URL(req.url);
   const nationalId = searchParams.get("nationalId");
   const name = searchParams.get("name");
@@ -105,7 +108,7 @@ const conditions = [
 
   return NextResponse.json({
     success: true,
-    data: criminals.map(criminal => ({
+    data: criminals.map((criminal: any) => ({ // eslint-disable-line @typescript-eslint/no-explicit-any
       id: criminal.id,
       name: criminal.name,
       nationalId: criminal.nationalId,

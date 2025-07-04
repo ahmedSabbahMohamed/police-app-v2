@@ -18,7 +18,23 @@ const getDatabasePath = () => {
   return path.join(process.cwd(), "sqlite.db");
 };
 
-const dbPath = getDatabasePath();
-const sqlite = new Database(dbPath);
+// Create database instance
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let db: any;
 
-export const db = drizzle(sqlite, { schema });
+// Only initialize database if not during build
+if (process.env.SKIP_DATABASE) {
+  // Mock database for build time
+  db = {};
+} else {
+  try {
+    const dbPath = getDatabasePath();
+    const sqlite = new Database(dbPath);
+    db = drizzle(sqlite, { schema });
+  } catch (error) {
+    console.warn('Database initialization failed:', error);
+    db = {};
+  }
+}
+
+export { db };

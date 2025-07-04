@@ -5,8 +5,9 @@ const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true,
   },
-  output: 'export',
-  trailingSlash: true,
+  // Remove static export for now since we have API routes
+  // output: 'export',
+  // trailingSlash: true,
   images: {
     unoptimized: true
   }

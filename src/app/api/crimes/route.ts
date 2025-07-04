@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const getCrimeHandler = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
@@ -102,6 +103,7 @@ const getCrimeHandler = async (req: NextRequest) => {
 };
 
 const createCrimeHandler = async (req: NextRequest) => {
+  
   const result = await validate(req, AddCrimeWithCriminalsSchema);
   if (!result.success) return result.response;
 
@@ -173,6 +175,7 @@ const createCrimeHandler = async (req: NextRequest) => {
 };
 
 const updateCrimeHandler = async (req: NextRequest) => {
+  
   const { searchParams } = new URL(req.url);
   const crimeId = searchParams.get("id");
 
@@ -196,6 +199,7 @@ const updateCrimeHandler = async (req: NextRequest) => {
 };
 
 const deleteCrimeFromCriminalHandler = async (req: NextRequest) => {
+  
   const { searchParams } = new URL(req.url);
   const nationalId = searchParams.get("nationalId");
   const crimeId = searchParams.get("crimeId");

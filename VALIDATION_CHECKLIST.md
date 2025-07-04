@@ -22,11 +22,11 @@
 
 ## 🔧 Build Process Validation
 
-### ✅ Static Export
+### ✅ Next.js Build
 - [ ] Next.js builds successfully (`npm run build`)
-- [ ] Static files generated in `out/` directory
-- [ ] All assets (CSS, JS, images) included
-- [ ] No broken links or missing resources
+- [ ] Server starts correctly (`npm start`)
+- [ ] All API routes work properly
+- [ ] No build errors or warnings
 
 ### ✅ Electron Packaging
 - [ ] Electron app builds without errors
