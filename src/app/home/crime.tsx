@@ -414,7 +414,7 @@ export default function CrimeForm() {
             </Button>
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">تسجيل</Button>
       </form>
     </Form>
   )
