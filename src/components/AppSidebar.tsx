@@ -5,7 +5,7 @@ import { Home, Users, Building2 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-interface AppSidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+type AppSidebarProps = React.HTMLAttributes<HTMLDivElement>
 
 export function AppSidebar({ className }: AppSidebarProps) {
   const pathname = usePathname()
