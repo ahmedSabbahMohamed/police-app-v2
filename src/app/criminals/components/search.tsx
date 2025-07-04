@@ -90,21 +90,27 @@ const Search = ({ onSearchResults, onLoading, onError }: SearchProps) => {
                 // Group crimes by criminal
                 const criminalMap = new Map<string, { criminal: Criminal; crimes: Crime[] }>();
                 
-                data.data.forEach((record: { crime: Crime; criminal: Criminal }) => {
+                data.data.forEach((record: { crime: Crime | null; criminal: Criminal }) => {
                     const { crime, criminal } = record;
                     
                     if (!criminalMap.has(criminal.id)) {
                         criminalMap.set(criminal.id, { criminal, crimes: [] });
                     }
                     
-                    criminalMap.get(criminal.id)!.crimes.push(crime);
+                    // Only add crime if it exists (not null)
+                    if (crime) {
+                        criminalMap.get(criminal.id)!.crimes.push(crime);
+                    }
                 });
                 
                 transformedResults.push(...criminalMap.values());
             } else {
                 // Single result
                 const { crime, criminal } = data.data;
-                transformedResults.push({ criminal, crimes: [crime] });
+                transformedResults.push({ 
+                    criminal, 
+                    crimes: crime ? [crime] : [] 
+                });
             }
 
             onSearchResults?.(transformedResults);

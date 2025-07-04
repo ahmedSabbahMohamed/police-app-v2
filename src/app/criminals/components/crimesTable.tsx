@@ -154,13 +154,8 @@ import {
         }
 
         if (data.success) {
-          // Create a new crime object with generated ID
-          const newCrime: Crime = {
-            id: `temp-${Date.now()}`, // Temporary ID, will be updated when data is refreshed
-            ...values.crime,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
+          // Use the real crime data returned from the API
+          const newCrime: Crime = data.data.crime;
           
           onAdd(newCrime);
           setIsAddDialogOpen(false);
@@ -208,74 +203,96 @@ import {
     };
 
     return (
-      <div className="space-y-4">
-        {/* Add Crime Button */}
-        <div className="flex justify-between items-center">
-          <Button onClick={handleAddClick} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            إضافة قضية جديدة
-          </Button>
-          <h2 className="text-xl font-semibold text-gray-900">
-            ({crimes.length} قضية)
-          </h2>
-        </div>
+        <div className="space-y-4">
+
+          {
+            crimes.length > 0 && (
+              <>
+                <div className="flex justify-between items-center">
+                  <Button onClick={handleAddClick} className="flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    إضافة قضية جديدة
+                  </Button>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    ({crimes.length} قضية)
+                  </h2>
+                </div>
+              </>
+            )
+          }
 
         {/* Crimes Table */}
-        <div className="border-2 border-gray-300 rounded-md overflow-hidden">
-          <Table className="border-collapse">
-            <TableHeader>
-              <TableRow className="bg-slate-900 text-white hover:bg-slate-900">
-                <TableHead className="w-1/5 text-white text-center border border-gray-300">م</TableHead>
-                <TableHead className="w-1/5 text-white text-center border border-gray-300">رقم القضية</TableHead>
-                <TableHead className="w-1/5 text-white text-center border border-gray-300">سنة القضية </TableHead>
-                <TableHead className="w-1/5 text-white text-center border border-gray-300">نوع الاتهام</TableHead>
-                <TableHead className="w-2/5 text-white text-center border border-gray-300">التصرفات النهائية</TableHead>
-                <TableHead className="text-center w-[50px] text-white border border-gray-300">الإجراءات</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {crimes.map((crime, index) => (
-                <TableRow key={crime.id} className="odd:bg-muted/40">
-                  <TableCell className='text-center border border-gray-300'>{index + 1}</TableCell>
-                  <TableCell className='text-center border border-gray-300'>{crime.number}</TableCell>
-                  <TableCell className='text-center border border-gray-300'>{crime.year}</TableCell>
-                  <TableCell className='text-center border border-gray-300'>{crime.typeOfAccusation}</TableCell>
-                  <TableCell className='text-center border border-gray-300'>{crime.lastBehaviors}</TableCell>
-                  <TableCell className="text-center border border-gray-300">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEditClick(crime)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          تعديل
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          className="text-red-500" 
-                          onClick={() => handleDeleteClick(crime)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2 text-red-500" />
-                          حذف
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+        {crimes.length > 0 ? (
+          <div className="border-2 border-gray-300 rounded-md overflow-hidden">
+            <Table className="border-collapse">
+              <TableHeader>
+                <TableRow className="bg-slate-900 text-white hover:bg-slate-900">
+                  <TableHead className="w-1/5 text-white text-center border border-gray-300">م</TableHead>
+                  <TableHead className="w-1/5 text-white text-center border border-gray-300">رقم القضية</TableHead>
+                  <TableHead className="w-1/5 text-white text-center border border-gray-300">سنة القضية </TableHead>
+                  <TableHead className="w-1/5 text-white text-center border border-gray-300">نوع الاتهام</TableHead>
+                  <TableHead className="w-2/5 text-white text-center border border-gray-300">التصرفات النهائية</TableHead>
+                  <TableHead className="text-center w-[50px] text-white border border-gray-300">الإجراءات</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {crimes.map((crime, index) => (
+                  <TableRow key={crime.id} className="odd:bg-muted/40">
+                    <TableCell className='text-center border border-gray-300'>{index + 1}</TableCell>
+                    <TableCell className='text-center border border-gray-300'>{crime.number}</TableCell>
+                    <TableCell className='text-center border border-gray-300'>{crime.year}</TableCell>
+                    <TableCell className='text-center border border-gray-300'>{crime.typeOfAccusation}</TableCell>
+                    <TableCell className='text-center border border-gray-300'>{crime.lastBehaviors}</TableCell>
+                    <TableCell className="text-center border border-gray-300">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleEditClick(crime)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            تعديل
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            className="text-red-500" 
+                            onClick={() => handleDeleteClick(crime)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2 text-red-500" />
+                            حذف
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        ) : (
+          <div className="border-2 border-gray-300 rounded-md p-8 text-center">
+            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">لا توجد قضايا مسجلة</h3>
+            <p className="text-gray-500 mb-4">هذا المجرم لا يملك أي قضايا مسجلة في النظام.</p>
+            <Button onClick={handleAddClick} className="flex items-center gap-2 mx-auto">
+              <Plus className="h-4 w-4" />
+              إضافة قضية جديدة
+            </Button>
+          </div>
+        )}
 
         {/* Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-                <h2 className="block text-end mt-4 text-2xl font-semibold text-gray-900">
-                  تعديل القضية
-                </h2>
+              <DialogTitle className="text-end">
+                تعديل القضية
+              </DialogTitle>
             </DialogHeader>
             <CrimeForm 
               initialData={editingCrime}
@@ -289,9 +306,9 @@ import {
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <h2 className="block text-end mt-4 text-2xl font-semibold text-gray-900">
+              <DialogTitle className="text-end">
                 إضافة قضية جديدة
-              </h2>
+              </DialogTitle>
             </DialogHeader>
             <CrimeForm 
               onSubmit={handleAddFormSubmit}
@@ -304,12 +321,12 @@ import {
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <h2 className="block text-end mt-4 text-2xl font-semibold text-gray-900">
+              <AlertDialogTitle className="text-end">
                 هل أنت متأكد؟
-              </h2>
-              <h3 className='text-end'>
+              </AlertDialogTitle>
+              <AlertDialogDescription className='text-end'>
                 <span className="text-red-600 font-semibold">تحذير:</span> حذف الجريمة سيؤدي إلى فقدان جميع البيانات المرتبطة بها.
-              </h3>
+              </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={isDeleting}>إلغاء</AlertDialogCancel>

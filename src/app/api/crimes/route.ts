@@ -3,7 +3,7 @@ import { CrimeTable, CriminalCrimeTable, CriminalTable } from "@/drizzle/schema"
 import { createHandler } from "@/lib/api/handler";
 import { validate } from "@/lib/api/validate";
 import { AddCrimeWithCriminalsSchema } from "@/lib/validators";
-import { and, eq, or } from "drizzle-orm";
+import { and, eq, or, like } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 
@@ -28,8 +28,8 @@ const getCrimeHandler = async (req: NextRequest) => {
     .where(
       or(
         eq(CriminalTable.nationalId, query),
-        eq(CriminalTable.name, query),
-        eq(CriminalTable.stageName, query)
+        like(CriminalTable.name, `%${query}%`),
+        like(CriminalTable.stageName, `%${query}%`)
       )
     );
 
@@ -83,6 +83,17 @@ const getCrimeHandler = async (req: NextRequest) => {
     .where(eq(CriminalCrimeTable.criminalId, criminal.id))
     .innerJoin(CrimeTable, eq(CrimeTable.id, CriminalCrimeTable.crimeId))
     .innerJoin(CriminalTable, eq(CriminalTable.id, CriminalCrimeTable.criminalId));
+
+  // If no crimes found, return the criminal with empty crimes array
+  if (records.length === 0) {
+    return NextResponse.json({
+      success: true,
+      data: [{
+        criminal: criminal,
+        crime: null
+      }],
+    }, { status: 200 });
+  }
 
   return NextResponse.json({
     success: true,
@@ -141,10 +152,22 @@ const createCrimeHandler = async (req: NextRequest) => {
     });
   }
 
+  // Return the created crime data with real ID
+  const createdCrime = {
+    id: crimeId,
+    number: crime.number,
+    year: crime.year,
+    typeOfAccusation: crime.typeOfAccusation,
+    lastBehaviors: crime.lastBehaviors,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
   return NextResponse.json({
     success: true,
     data: {
-      message: "data stroed successfully!"
+      message: "data stored successfully!",
+      crime: createdCrime
     }
   });
 };
