@@ -1,6 +1,14 @@
 const path = require('path');
 const fs = require('fs');
-const { app } = require('electron');
+
+// Try to get Electron app, but handle cases where it's not available
+let app;
+try {
+  app = require('electron').app;
+} catch (error) {
+  // Electron not available (e.g., in testing environment)
+  app = null;
+}
 
 class DatabaseManager {
   constructor() {
@@ -13,9 +21,14 @@ class DatabaseManager {
       return this.dbPath;
     }
 
-    // Use Electron's userData directory for the database
-    const userDataPath = app.getPath('userData');
-    this.dbPath = path.join(userDataPath, 'police-app.db');
+    // Use Electron's userData directory for the database if available
+    if (app) {
+      const userDataPath = app.getPath('userData');
+      this.dbPath = path.join(userDataPath, 'police-app.db');
+    } else {
+      // Fallback for testing or non-Electron environments
+      this.dbPath = path.join(process.cwd(), 'test-user-data', 'police-app.db');
+    }
     
     // Ensure the directory exists
     const dbDir = path.dirname(this.dbPath);

@@ -39,8 +39,18 @@ function createWindow() {
         dbManager = new DatabaseManager();
         await dbManager.initializeDatabase();
         
-        // Set environment variable for database path
-        process.env.DATABASE_PATH = dbManager.getDatabasePath();
+        // Set environment variable for database path globally
+        const dbPath = dbManager.getDatabasePath();
+        process.env.DATABASE_PATH = dbPath;
+        
+        // Also set it for any child processes
+        if (process.platform === 'win32') {
+          process.env.DATABASE_PATH = dbPath;
+        } else {
+          process.env.DATABASE_PATH = dbPath;
+        }
+        
+        console.log('📁 Database path set:', dbPath);
       }
       
       if (!isDev) {

@@ -13,6 +13,14 @@ class NextServer {
 
   async start() {
     try {
+      // Ensure DATABASE_PATH is available
+      if (!process.env.DATABASE_PATH) {
+        console.error('❌ DATABASE_PATH environment variable is not set');
+        throw new Error('DATABASE_PATH environment variable is required');
+      }
+      
+      console.log('📁 Next.js server using database path:', process.env.DATABASE_PATH);
+      
       // Initialize Next.js
       const dev = false;
       const dir = path.join(__dirname, '..');
@@ -23,6 +31,12 @@ class NextServer {
 
       // Create Express app
       this.app = express();
+      
+      // Add error handling middleware
+      this.app.use((err, req, res, next) => {
+        console.error('Express error:', err);
+        res.status(500).json({ error: 'Internal server error' });
+      });
       
       // Handle all requests with Next.js
       this.app.all('*', (req, res) => {

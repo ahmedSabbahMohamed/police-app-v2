@@ -10,17 +10,13 @@ const getDatabasePath = () => {
     return "sqlite.db";
   }
   
-  // In Electron production, use environment variable or app.getPath('userData')
+  // In Electron production, use environment variable
   if (process.env.DATABASE_PATH) {
     console.log('Using database path from environment:', process.env.DATABASE_PATH);
     return process.env.DATABASE_PATH;
   }
   
-  // For Electron main process, we'll handle this in the main process
-  // This is just a fallback for development
-  return path.join(process.cwd(), "sqlite.db");
-
-  // Fallback: use current working directory (not recommended for production)
+  // Fallback: use current working directory
   const fallbackPath = path.join(process.cwd(), "sqlite.db");
   console.warn('Using fallback database path:', fallbackPath);
   return fallbackPath;
@@ -38,6 +34,12 @@ if (process.env.SKIP_DATABASE) {
   try {
     const dbPath = getDatabasePath();
     console.log('Initializing database at:', dbPath);
+    
+    // Ensure the directory exists
+    const dbDir = path.dirname(dbPath);
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+    }
     
     const sqlite = new Database(dbPath);
     db = drizzle(sqlite, { schema });
